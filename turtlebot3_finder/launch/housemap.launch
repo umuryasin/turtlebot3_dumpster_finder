@@ -1,0 +1,22 @@
+<launch>
+  <arg name="model" default="$(env TURTLEBOT3_MODEL)" doc="model type [burger, waffle, waffle_pi]"/>
+  <arg name="x_pos" default="-3.0"/>
+  <arg name="y_pos" default="5.0"/>
+  <arg name="z_pos" default="0.0"/>
+  <arg name="yaw_pos" default="3.14"/>
+
+  <include file="$(find gazebo_ros)/launch/empty_world.launch">
+    <arg name="world_name" value="$(find turtlebot3_finder)/worlds/garden1.world"/>
+    <arg name="paused" value="false"/>
+    <arg name="use_sim_time" value="true"/>
+    <arg name="gui" value="true"/>
+    <arg name="headless" value="false"/>
+    <arg name="debug" value="false"/>
+  </include>
+
+  <node name="dumpster_finder" pkg="turtlebot3_finder" type="dumpster_finder" output="screen"/>
+
+  <param name="robot_description" command="$(find xacro)/xacro --inorder $(find turtlebot3_finder)/urdf/turtlebot3_$(arg model)2.urdf.xacro" />
+
+  <node name="spawn_urdf" pkg="gazebo_ros" type="spawn_model" args="-urdf -model turtlebot3_2 -x $(arg x_pos) -y $(arg y_pos) -z $(arg z_pos) -Y $(arg yaw_pos) -param robot_description" />
+</launch>
